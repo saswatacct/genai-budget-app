@@ -1,9 +1,12 @@
+
 fastapi
 uvicorn
 python-dotenv
 passlib[bcrypt]
-python-jose
+bcrypt
+python-jose[cryptography]
 python-multipart
 groq
 twilio
 cryptography
+aiosqlite
