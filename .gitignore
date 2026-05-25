@@ -1,10 +1,35 @@
+
+# Environment
 .env
+smartspend-web/.env
+
+# Python
 .venv/
 __pycache__/
 *.pyc
+
+# Node
 node_modules/
+smartspend-web/node_modules/
+
+# Database
 *.db
 *.sqlite
+*.sqlite3
+
+# Logs
 *.log
+
+# IDE
 .vscode/
 .idea/
+
+# Docker
+.dockerignore
+
+# Git
+.git/
+
+# OS
+.DS_Store
+Thumbs.db
