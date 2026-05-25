@@ -3,14 +3,22 @@ from datetime import datetime
 
 def build_message(data):
 
-    current_time = datetime.now().strftime(
+    formatted_time = datetime.strptime(
+
+        data["transaction_time"],
+
+        "%Y-%m-%d %H:%M:%S"
+
+    ).strftime(
+
         "%d-%m-%Y %I:%M %p"
+
     )
 
     return f"""
 👋 Hello {data["user_name"]},
 
-💳 *SmartSpend AI Financial Alert Created by Mr.Saswat*
+💳 SmartSpend AI Financial Alert Created by Mr.Saswat
 
 ━━━━━━━━━━━━━━━━━━
 
@@ -20,13 +28,13 @@ def build_message(data):
 💰 Set UPI Limit:
 ₹{data["upi_limit"]}
 
-💳 Set Credit Card Limit:
+💳 Set Card Limit:
 ₹{data["credit_limit"]}
 
 ━━━━━━━━━━━━━━━━━━
 
 🕒 Transaction Added At:
-{current_time}
+{formatted_time}
 
 💵 Recent Transaction Amount Added:
 ₹{data["amount"]}
