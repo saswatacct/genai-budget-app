@@ -167,7 +167,19 @@ async def create_tables():
                 DEFAULT 0,
 
                 created_at TIMESTAMP
-                DEFAULT CURRENT_TIMESTAMP
+                DEFAULT (
+
+                    datetime(
+
+                        'now',
+
+                        '+5 hours',
+
+                        '+30 minutes'
+
+                    )
+
+                )
 
             )
             '''
