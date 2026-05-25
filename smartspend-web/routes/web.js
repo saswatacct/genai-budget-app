@@ -1,313 +1,3 @@
-// const express = require('express')
-// const axios = require('axios')
-
-// const router = express.Router()
-
-// const API = process.env.BACKEND_URL
-
-
-// // ======================================
-// // HOME
-// // ======================================
-
-// router.get('/', (req, res) => {
-
-//     res.redirect('/login')
-// })
-
-
-// // ======================================
-// // LOGIN
-// // ======================================
-
-// router.get('/login', (req, res) => {
-
-//     res.render('login')
-// })
-
-// router.post('/login', async (req, res) => {
-
-//     try {
-
-//         const response = await axios.post(
-//             `${API}/auth/login`,
-//             {
-//                 email: req.body.email,
-//                 password: req.body.password
-//             }
-//         )
-
-//         req.session.token =
-//             response.data.access_token
-
-//         res.redirect('/dashboard')
-
-//     } catch (err) {
-
-//         console.log(err.response?.data)
-
-//         res.send('Login Failed')
-//     }
-// })
-
-
-// // ======================================
-// // SIGNUP
-// // ======================================
-
-// router.get('/signup', (req, res) => {
-
-//     res.render('signup')
-// })
-
-// router.post('/signup', async (req, res) => {
-
-//     try {
-
-//         const response = await axios.post(
-//             `${API}/auth/signup`,
-//             {
-//                 name: req.body.name,
-//                 email: req.body.email,
-//                 password: req.body.password,
-//                 phone: req.body.phone
-//             }
-//         )
-
-//         req.session.token =
-//             response.data.access_token
-
-//         res.redirect('/dashboard')
-
-//     } catch (err) {
-
-//         console.log(err.response?.data)
-
-//         res.send('Signup Failed')
-//     }
-// })
-
-
-// // ======================================
-// // DASHBOARD
-// // ======================================
-
-// router.get('/dashboard', (req, res) => {
-
-//     if (!req.session.token) {
-
-//         return res.redirect('/login')
-//     }
-
-//     res.render('dashboard')
-// })
-
-
-// // ======================================
-// // LIMIT SETUP
-// // ======================================
-
-// router.get('/limit', (req, res) => {
-
-//     if (!req.session.token) {
-
-//         return res.redirect('/login')
-//     }
-
-//     res.render('limit')
-// })
-
-// router.post('/limit', async (req, res) => {
-
-//     try {
-
-//         await axios.post(
-//             `${API}/limit/create`,
-//             {
-//                 upi_limit:
-//                     Number(req.body.upi_limit),
-
-//                 credit_limit:
-//                     Number(req.body.credit_limit),
-
-//                 card_no:
-//                     req.body.card_no,
-
-//                 account_no:
-//                     req.body.account_no,
-
-//                 atm_enabled:
-//                     req.body.atm_enabled === 'on',
-
-//                 online_enabled:
-//                     req.body.online_enabled === 'on'
-//             },
-//             {
-//                 headers: {
-//                     Authorization:
-//                         `Bearer ${req.session.token}`
-//                 }
-//             }
-//         )
-
-//         res.redirect('/dashboard')
-
-//     } catch (err) {
-
-//         console.log(err.response?.data)
-
-//         res.send(
-//             err.response?.data || 'Limit Error'
-//         )
-//     }
-// })
-
-
-// // ======================================
-// // ADD TRANSACTION
-// // ======================================
-
-// router.get('/transaction', (req, res) => {
-
-//     if (!req.session.token) {
-
-//         return res.redirect('/login')
-//     }
-
-//     res.render('transaction', {
-//         response: null
-//     })
-// })
-
-// router.post('/transaction', async (req, res) => {
-
-//     try {
-
-//         const response = await axios.post(
-//             `${API}/transaction/add`,
-//             {
-//                 amount:
-//                     Number(req.body.amount),
-
-//                 merchant:
-//                     req.body.merchant,
-
-//                 txn_mode:
-//                     req.body.txn_mode,
-
-//                 payment_mode:
-//                     req.body.payment_mode
-//             },
-//             {
-//                 headers: {
-//                     Authorization:
-//                         `Bearer ${req.session.token}`
-//                 }
-//             }
-//         )
-
-//         res.render('transaction', {
-//             response: response.data
-//         })
-
-//     } catch (err) {
-
-//         console.log(err.response?.data)
-
-//         res.send(
-//             err.response?.data || 'Transaction Error'
-//         )
-//     }
-// })
-
-
-// // ======================================
-// // TRANSACTION HISTORY
-// // ======================================
-
-// router.get('/history', async (req, res) => {
-
-//     try {
-
-//         const response = await axios.get(
-//             `${API}/history/transactions`,
-//             {
-//                 headers: {
-//                     Authorization:
-//                         `Bearer ${req.session.token}`
-//                 }
-//             }
-//         )
-
-//         res.render('history', {
-//             transactions:
-//                 response.data.transactions
-//         })
-
-//     } catch (err) {
-
-//         console.log(err.response?.data)
-
-//         res.send(
-//             'Failed to load transaction history'
-//         )
-//     }
-// })
-
-
-// // ======================================
-// // DELETE TRANSACTION
-// // ======================================
-
-// router.post(
-//     '/transaction/delete/:id',
-//     async (req, res) => {
-
-//         try {
-
-//             await axios.delete(
-//                 `${API}/transaction/delete/${req.params.id}`,
-//                 {
-//                     headers: {
-//                         Authorization:
-//                             `Bearer ${req.session.token}`
-//                     }
-//                 }
-//             )
-
-//             res.redirect('/history')
-
-//         } catch (err) {
-
-//             console.log(err.response?.data)
-
-//             res.send('Delete failed')
-//         }
-//     }
-// )
-
-
-// // ======================================
-// // LOGOUT
-// // ======================================
-
-// router.get('/logout', (req, res) => {
-
-//     req.session.destroy(() => {
-
-//         res.redirect('/login')
-//     })
-// })
-
-
-// // ======================================
-// // EXPORT ROUTER
-// // ======================================
-
-// module.exports = router
-
-
-
 const express = require('express')
 const axios = require('axios')
 
@@ -348,10 +38,10 @@ router.post('/login', async (req, res) => {
             {
 
                 email:
-                req.body.email,
+                    req.body.email,
 
                 password:
-                req.body.password
+                    req.body.password
 
             }
 
@@ -360,7 +50,7 @@ router.post('/login', async (req, res) => {
         req.session.token =
 
             response.data
-            .access_token
+                .access_token
 
         res.redirect(
             '/dashboard'
@@ -368,7 +58,7 @@ router.post('/login', async (req, res) => {
 
     }
 
-    catch(err){
+    catch (err) {
 
         console.log(
 
@@ -377,7 +67,13 @@ router.post('/login', async (req, res) => {
         )
 
         res.send(
+
+            err.response
+                ?.data
+                ?.detail ||
+
             'Login Failed'
+
         )
 
     }
@@ -389,7 +85,7 @@ router.post('/login', async (req, res) => {
 // SIGNUP
 // ======================================
 
-router.get('/signup',(req,res)=>{
+router.get('/signup', (req, res) => {
 
     res.render(
         'signup'
@@ -397,37 +93,53 @@ router.get('/signup',(req,res)=>{
 
 })
 
-router.post('/signup',async(req,res)=>{
+router.post('/signup', async (req, res) => {
 
-    try{
+    try {
+
+        const password =
+
+            req.body.password
+                ?.trim()
+
+        if (
+            password.length > 72
+        ) {
+
+            return res.send(
+
+                'Password cannot exceed 72 characters'
+
+            )
+
+        }
 
         const response =
-        await axios.post(
+            await axios.post(
 
-            `${API}/auth/signup`,
+                `${API}/auth/signup`,
 
-            {
+                {
 
-                name:
-                req.body.name,
+                    name:
+                        req.body.name,
 
-                email:
-                req.body.email,
+                    email:
+                        req.body.email,
 
-                password:
-                req.body.password,
+                    password,
 
-                phone:
-                req.body.phone
+                    phone:
+                        req.body.phone
 
-            }
+                }
 
-        )
+            )
 
         req.session.token =
 
-        response.data
-        .access_token
+            response.data
+                .access_token
 
         res.redirect(
             '/dashboard'
@@ -435,7 +147,7 @@ router.post('/signup',async(req,res)=>{
 
     }
 
-    catch(err){
+    catch (err) {
 
         console.log(
 
@@ -444,7 +156,13 @@ router.post('/signup',async(req,res)=>{
         )
 
         res.send(
+
+            err.response
+                ?.data
+                ?.detail ||
+
             'Signup Failed'
+
         )
 
     }
@@ -458,7 +176,7 @@ router.post('/signup',async(req,res)=>{
 
 router.get(
     '/forgot-password',
-    (req,res)=>{
+    (req, res) => {
 
         res.render(
             'forgot_password'
@@ -470,9 +188,9 @@ router.get(
 
 router.post(
     '/forgot-password',
-    async(req,res)=>{
+    async (req, res) => {
 
-        try{
+        try {
 
             await axios.post(
 
@@ -481,7 +199,7 @@ router.post(
                 {
 
                     email:
-                    req.body.email
+                        req.body.email
 
                 }
 
@@ -501,7 +219,7 @@ router.post(
 
         }
 
-        catch(err){
+        catch (err) {
 
             console.log(
 
@@ -510,6 +228,10 @@ router.post(
             )
 
             res.send(
+
+                err.response
+                    ?.data
+                    ?.detail ||
 
                 'Unable to process request'
 
@@ -527,7 +249,20 @@ router.post(
 
 router.get(
     '/reset-password',
-    (req,res)=>{
+    (req, res) => {
+
+        const token =
+            req.query.token
+
+        if (!token) {
+
+            return res.send(
+
+                'Invalid reset link'
+
+            )
+
+        }
 
         res.render(
 
@@ -535,8 +270,7 @@ router.get(
 
             {
 
-                token:
-                req.query.token
+                token
 
             }
 
@@ -548,9 +282,75 @@ router.get(
 
 router.post(
     '/reset-password',
-    async(req,res)=>{
+    async (req, res) => {
 
-        try{
+        try {
+
+            const token =
+
+                req.body.token
+                    ?.trim()
+
+            const password =
+
+                req.body.password
+                    ?.trim()
+
+            if (
+
+                !token
+
+            ) {
+
+                return res.send(
+
+                    'Reset token missing'
+
+                )
+
+            }
+
+            if (
+
+                !password
+
+            ) {
+
+                return res.send(
+
+                    'Password required'
+
+                )
+
+            }
+
+            if (
+
+                password.length < 8
+
+            ) {
+
+                return res.send(
+
+                    'Password minimum 8 characters'
+
+                )
+
+            }
+
+            if (
+
+                password.length > 72
+
+            ) {
+
+                return res.send(
+
+                    'Password cannot exceed 72 characters'
+
+                )
+
+            }
 
             await axios.post(
 
@@ -558,11 +358,9 @@ router.post(
 
                 {
 
-                    token:
-                    req.body.token,
+                    token,
 
-                    password:
-                    req.body.password
+                    password
 
                 }
 
@@ -580,15 +378,23 @@ router.post(
 
         }
 
-        catch(err){
+        catch (err) {
 
             console.log(
 
-                err.response?.data
+                'RESET ERROR:',
+
+                err.response?.data ||
+
+                err.message
 
             )
 
             res.send(
+
+                err.response
+                    ?.data
+                    ?.detail ||
 
                 'Password reset failed'
 
@@ -604,11 +410,11 @@ router.post(
 // DASHBOARD
 // ======================================
 
-router.get('/dashboard',(req,res)=>{
+router.get('/dashboard', (req, res) => {
 
-    if(
+    if (
         !req.session.token
-    ){
+    ) {
 
         return res.redirect(
             '/login'
@@ -624,14 +430,14 @@ router.get('/dashboard',(req,res)=>{
 
 
 // ======================================
-// LIMIT SETUP
+// LIMIT
 // ======================================
 
-router.get('/limit',(req,res)=>{
+router.get('/limit', (req, res) => {
 
-    if(
+    if (
         !req.session.token
-    ){
+    ) {
 
         return res.redirect(
             '/login'
@@ -645,10 +451,9 @@ router.get('/limit',(req,res)=>{
 
 })
 
+router.post('/limit', async (req, res) => {
 
-router.post('/limit',async(req,res)=>{
-
-    try{
+    try {
 
         await axios.post(
 
@@ -658,43 +463,43 @@ router.post('/limit',async(req,res)=>{
 
                 upi_limit:
 
-                Number(
-                    req.body.upi_limit
-                ),
+                    Number(
+                        req.body.upi_limit
+                    ),
 
                 credit_limit:
 
-                Number(
-                    req.body.credit_limit
-                ),
+                    Number(
+                        req.body.credit_limit
+                    ),
 
                 card_no:
-                req.body.card_no,
+                    req.body.card_no,
 
                 account_no:
-                req.body.account_no,
+                    req.body.account_no,
 
                 atm_enabled:
 
-                req.body
-                .atm_enabled
-                === 'on',
+                    req.body
+                        .atm_enabled
+                    === 'on',
 
                 online_enabled:
 
-                req.body
-                .online_enabled
-                === 'on'
+                    req.body
+                        .online_enabled
+                    === 'on'
 
             },
 
             {
 
-                headers:{
+                headers: {
 
                     Authorization:
 
-                    `Bearer ${req.session.token}`
+                        `Bearer ${req.session.token}`
 
                 }
 
@@ -708,7 +513,7 @@ router.post('/limit',async(req,res)=>{
 
     }
 
-    catch(err){
+    catch (err) {
 
         console.log(
 
@@ -717,8 +522,6 @@ router.post('/limit',async(req,res)=>{
         )
 
         res.send(
-
-            err.response?.data ||
 
             'Limit Error'
 
@@ -733,11 +536,11 @@ router.post('/limit',async(req,res)=>{
 // TRANSACTION
 // ======================================
 
-router.get('/transaction',(req,res)=>{
+router.get('/transaction', (req, res) => {
 
-    if(
+    if (
         !req.session.token
-    ){
+    ) {
 
         return res.redirect(
             '/login'
@@ -751,7 +554,7 @@ router.get('/transaction',(req,res)=>{
 
         {
 
-            response:null
+            response: null
 
         }
 
@@ -760,50 +563,50 @@ router.get('/transaction',(req,res)=>{
 })
 
 
-router.post('/transaction',async(req,res)=>{
+router.post('/transaction', async (req, res) => {
 
-    try{
+    try {
 
         const response =
-        await axios.post(
+            await axios.post(
 
-            `${API}/transaction/add`,
+                `${API}/transaction/add`,
 
-            {
+                {
 
-                amount:
+                    amount:
 
-                Number(
-                    req.body.amount
-                ),
+                        Number(
+                            req.body.amount
+                        ),
 
-                merchant:
+                    merchant:
 
-                req.body.merchant,
+                        req.body.merchant,
 
-                txn_mode:
+                    txn_mode:
 
-                req.body.txn_mode,
+                        req.body.txn_mode,
 
-                payment_mode:
+                    payment_mode:
 
-                req.body.payment_mode
+                        req.body.payment_mode
 
-            },
+                },
 
-            {
+                {
 
-                headers:{
+                    headers: {
 
-                    Authorization:
+                        Authorization:
 
-                    `Bearer ${req.session.token}`
+                            `Bearer ${req.session.token}`
+
+                    }
 
                 }
 
-            }
-
-        )
+            )
 
         res.render(
 
@@ -812,7 +615,7 @@ router.post('/transaction',async(req,res)=>{
             {
 
                 response:
-                response.data
+                    response.data
 
             }
 
@@ -820,7 +623,7 @@ router.post('/transaction',async(req,res)=>{
 
     }
 
-    catch(err){
+    catch (err) {
 
         console.log(
 
@@ -830,7 +633,9 @@ router.post('/transaction',async(req,res)=>{
 
         res.send(
 
-            err.response?.data ||
+            err.response
+                ?.data
+                ?.detail ||
 
             'Transaction Error'
 
@@ -845,28 +650,28 @@ router.post('/transaction',async(req,res)=>{
 // HISTORY
 // ======================================
 
-router.get('/history',async(req,res)=>{
+router.get('/history', async (req, res) => {
 
-    try{
+    try {
 
         const response =
-        await axios.get(
+            await axios.get(
 
-            `${API}/history/transactions`,
+                `${API}/history/transactions`,
 
-            {
+                {
 
-                headers:{
+                    headers: {
 
-                    Authorization:
+                        Authorization:
 
-                    `Bearer ${req.session.token}`
+                            `Bearer ${req.session.token}`
+
+                    }
 
                 }
 
-            }
-
-        )
+            )
 
         res.render(
 
@@ -876,8 +681,8 @@ router.get('/history',async(req,res)=>{
 
                 transactions:
 
-                response.data
-                .transactions
+                    response.data
+                        .transactions
 
             }
 
@@ -885,7 +690,7 @@ router.get('/history',async(req,res)=>{
 
     }
 
-    catch(err){
+    catch (err) {
 
         console.log(
 
@@ -895,7 +700,7 @@ router.get('/history',async(req,res)=>{
 
         res.send(
 
-            'Failed to load history'
+            'History Error'
 
         )
 
@@ -905,64 +710,66 @@ router.get('/history',async(req,res)=>{
 
 
 // ======================================
-// DELETE TRANSACTION
+// DELETE
 // ======================================
 
 router.post(
-'/transaction/delete/:id',
+    '/transaction/delete/:id',
 
-async(req,res)=>{
+    async (req, res) => {
 
-    try{
+        try {
 
-        await axios.delete(
+            await axios.delete(
 
-            `${API}/transaction/delete/${req.params.id}`,
+                `${API}/transaction/delete/${req.params.id}`,
 
-            {
+                {
 
-                headers:{
+                    headers: {
 
-                    Authorization:
+                        Authorization:
 
-                    `Bearer ${req.session.token}`
+                            `Bearer ${req.session.token}`
+
+                    }
 
                 }
 
-            }
+            )
 
-        )
+            res.redirect(
+                '/history'
+            )
 
-        res.redirect(
-            '/history'
-        )
+        }
 
-    }
+        catch (err) {
 
-    catch(err){
+            console.log(
 
-        console.log(
+                err.response?.data
 
-            err.response?.data
+            )
 
-        )
+            res.send(
 
-        res.send(
-            'Delete Failed'
-        )
+                'Delete Failed'
 
-    }
+            )
 
-})
+        }
+
+    })
 
 
 // ======================================
 // LOGOUT
 // ======================================
 
-router.get('/logout',(req,res)=>{
+router.get('/logout', (req, res) => {
 
-    req.session.destroy(()=>{
+    req.session.destroy(() => {
 
         res.redirect(
             '/login'
@@ -972,9 +779,5 @@ router.get('/logout',(req,res)=>{
 
 })
 
-
-// ======================================
-// EXPORT
-// ======================================
 
 module.exports = router
